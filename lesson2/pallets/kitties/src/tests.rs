@@ -446,7 +446,7 @@ fn transfer_kitties_failed_when_not_kitties_owner() {
 		assert_ok!(KittiesModule::create(Origin::signed(1),10,10));
 		assert_ok!(KittiesModule::create(Origin::signed(2),10,10));
 		assert_noop!(
-			KittiesModule::transfer(Origin::signed(2),2,0,10),
+			KittiesModule::transfer(Origin::signed(2),1,0,10),
 			Error::<Test>::NotKittiesOwner
 		);
 		assert_noop!(
@@ -454,8 +454,20 @@ fn transfer_kitties_failed_when_not_kitties_owner() {
 			Error::<Test>::NotKittiesOwner
 		);
 		assert_ok!(KittiesModule::transfer(Origin::signed(1),2,0,10));
-		assert_ok!(KittiesModule::transfer(Origin::signed(2),2,0,10));
+		assert_ok!(KittiesModule::transfer(Origin::signed(2),1,0,10));
 		
+	});
+}
+
+#[test]
+fn transfer_kitties_failed_when_transfer_self() {
+	new_test_ext().execute_with(|| {
+		run_to_block(10);
+		assert_ok!(KittiesModule::create(Origin::signed(1),10,10));
+		assert_noop!(
+			KittiesModule::transfer(Origin::signed(1),1,0,10),
+			Error::<Test>::TransferSelf
+		);
 	});
 }
 
@@ -513,7 +525,7 @@ fn transfer_kitties_failed_when_no_kitties() {
 		run_to_block(10);
 		assert_ok!(KittiesModule::create(Origin::signed(1),1,10));
 		assert_noop!(
-			KittiesModule::transfer(Origin::signed(1),1,1,10),
+			KittiesModule::transfer(Origin::signed(1),2,1,10),
 			Error::<Test>::InvalidKittyId
 		);
 	});

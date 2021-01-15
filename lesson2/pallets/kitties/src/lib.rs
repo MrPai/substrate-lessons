@@ -89,7 +89,8 @@ decl_error! {
         NotEnoughTransferDeposit,
         NotEnoughReservedDeposit,
         NotEnoughForTransfer,
-        InvalidAccount
+        InvalidAccount,
+        TransferSelf
 	}
 }
 
@@ -135,6 +136,7 @@ decl_module! {
         ) -> dispatch::DispatchResult {
             
             let sender = ensure_signed(origin)?;
+            ensure!(sender != to, Error::<T>::TransferSelf);
             let existential_deposit = T::ExistentialDeposit::get();
             ensure!(value >= existential_deposit, Error::<T>::NotEnoughTransferDeposit);
             let mut sender_account: AccountData::<T::Balance> = Account::<T>::get(&sender).ok_or(Error::<T>::InvalidAccount)?;
