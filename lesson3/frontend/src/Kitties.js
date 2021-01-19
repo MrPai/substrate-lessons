@@ -19,14 +19,17 @@ export default function Kitties (props) {
 
   const fetchKittyCnt = () => {
     /* TODO: 加代码，从 substrate 端读取数据过来 */
+      // console.log("fetchKittyCnt");
   };
 
   const fetchKitties = () => {
     /* TODO: 加代码，从 substrate 端读取数据过来 */
+      // console.log("fetchKitties");
   };
 
   const populateKitties = () => {
     /* TODO: 加代码，从 substrate 端读取数据过来 */
+      // console.log("populateKitties");
   };
 
   useEffect(fetchKittyCnt, [api, keyring]);
