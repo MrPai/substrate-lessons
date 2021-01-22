@@ -268,11 +268,16 @@ impl pallet_template::Trait for Runtime {
 	type Event = Event;
 }
 
+parameter_types! {
+	pub const PricePrecision: u8 = 3;
+}
+
 /// For pallet-ocw-demo
 impl pallet_ocw_demo::Trait for Runtime {
 	type AuthorityId = pallet_ocw_demo::crypto::TestAuthId;
 	type Call = Call;
 	type Event = Event;
+	type PricePrecision = PricePrecision;
 }
 
 impl<LocalCall> frame_system::offchain::CreateSignedTransaction<LocalCall> for Runtime
