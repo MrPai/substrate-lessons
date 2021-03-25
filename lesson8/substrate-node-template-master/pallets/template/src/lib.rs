@@ -6,6 +6,7 @@
 
 use frame_support::{decl_module, decl_storage, decl_event, decl_error, dispatch, traits::Get};
 use frame_system::ensure_signed;
+use frame_support::pallet_prelude::*;
 
 #[cfg(test)]
 mod mock;
@@ -28,7 +29,7 @@ decl_storage! {
 	trait Store for Module<T: Config> as TemplateModule {
 		// Learn more about declaring storage items:
 		// https://substrate.dev/docs/en/knowledgebase/runtime/storage#declaring-storage-items
-		Something get(fn something): Option<u32>;
+		Something get(fn something): Option<u64>;
 	}
 }
 
@@ -38,7 +39,7 @@ decl_event!(
 	pub enum Event<T> where AccountId = <T as frame_system::Config>::AccountId {
 		/// Event documentation should end with an array that provides descriptive names for event
 		/// parameters. [something, who]
-		SomethingStored(u32, AccountId),
+		SomethingStored(u64, AccountId),
 	}
 );
 
@@ -66,7 +67,7 @@ decl_module! {
 		/// An example dispatchable that takes a singles value as a parameter, writes the value to
 		/// storage and emits an event. This function must be dispatched by a signed extrinsic.
 		#[weight = 10_000 + T::DbWeight::get().writes(1)]
-		pub fn do_something(origin, something: u32) -> dispatch::DispatchResult {
+		pub fn do_something(origin, something: u64) -> dispatch::DispatchResult {
 			// Check that the extrinsic was signed and get the signer.
 			// This function will return an error if the extrinsic is not signed.
 			// https://substrate.dev/docs/en/knowledgebase/runtime/origin
@@ -98,6 +99,11 @@ decl_module! {
 					Ok(())
 				},
 			}
+		}
+
+		fn on_runtime_upgrade() -> Weight {
+			let _ = Something::translate::<_,_>(|value: Option<u32>| value.map(|v| v as u64));
+			0
 		}
 	}
 }
